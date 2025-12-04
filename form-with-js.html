@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Form (With JS & Theme Toggle)</title>
+
+  <style>
+    :root {
+      --background-color: #f3f3f3;
+      --text-color: #000000;
+      --form-bg: #ffffff;
+      --button-bg: #0077ff;
+      --button-text: #ffffff;
+    }
+
+    [data-theme="dark"] {
+      --background-color: #222222;
+      --text-color: #eeeeee;
+      --form-bg: #333333;
+      --button-bg: #005fe0;
+      --button-text: #ffffff;
+    }
+
+    body {
+      font-family: system-ui, sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    button {
+      background-color: var(--button-bg);
+      color: var(--button-text);
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+
+    form {
+      background-color: var(--form-bg);
+      padding: 1.5rem;
+      border-radius: 10px;
+      max-width: 450px;
+      width: 100%;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: .3rem;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: .6rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    textarea {
+      resize: vertical;
+      height: 100px;
+    }
+
+    input:required, textarea:required {
+      border-left: 4px solid #444;
+    }
+
+    input:invalid, textarea:invalid {
+      border-color: red;
+      background: #ffe6e6;
+    }
+
+    input:valid, textarea:valid {
+      border-color: green;
+      background: #e6ffe6;
+    }
+
+    input:placeholder-shown, textarea:placeholder-shown {
+      background: white;
+    }
+
+    output {
+      display: block;
+      min-height: 1.2rem;
+      padding: .4rem;
+      font-size: .9rem;
+      border-radius: 4px;
+    }
+
+    #error-output { color: darkred; }
+    #info-output { color: darkblue; }
+  </style>
+</head>
+
+<body>
+
+<button id="theme-toggle" type="button">Toggle Theme</button>
+
+<form action="https://httpbin.org/post" method="POST" novalidate>
+
+  <label for="name">Name*</label>
+  <input id="name" name="name" placeholder="Your name"
+         required minlength="2" maxlength="40" pattern="[A-Za-z ]+">
+
+  <label for="email">Email*</label>
+  <input id="email" name="email" type="email" placeholder="you@example.com"
+         required>
+
+  <label for="comments">Comments*</label>
+  <textarea id="comments" name="comments"
+            placeholder="Write your message here..."
+            required minlength="5" maxlength="200"></textarea>
+
+  <input type="hidden" name="possible_bot" value="true">
+
+  <button type="submit">Submit</button>
+
+  <output id="error-output"></output>
+  <output id="info-output"></output>
+
+</form>
+
+<script>
+  const form = document.querySelector("form");
+  const nameField = document.querySelector("#name");
+  const emailField = document.querySelector("#email");
+  const commentsField = document.querySelector("#comments");
+  const errorOutput = document.querySelector("#error-output");
+  const infoOutput = document.querySelector("#info-output");
+
+  let form_errors = [];
+
+  function flashError(message, field) {
+    errorOutput.textContent = message;
+    field.style.borderColor = "red";
+    setTimeout(() => {
+      errorOutput.textContent = "";
+      field.style.borderColor = "";
+    }, 1500);
+  }
+
+  nameField.addEventListener("input", () => {
+    const pattern = /^[A-Za-z ]*$/;
+    if (!pattern.test(nameField.value)) {
+      flashError("Illegal character typed!", nameField);
+      nameField.value = nameField.value.replace(/[^A-Za-z ]/g, '');
+    }
+  });
+
+  const maxComments = parseInt(commentsField.getAttribute("maxlength"));
+  commentsField.addEventListener("input", () => {
+    const remaining = maxComments - commentsField.value.length;
+    infoOutput.textContent = `Characters left: ${remaining}`;
+    infoOutput.style.color = remaining <= 10 ? "orange" : "darkblue";
+  });
+
+  form.addEventListener("submit", (e) => {
+    form_errors = [];
+    errorOutput.textContent = "";
+
+    if (!nameField.checkValidity()) {
+      form_errors.push({ field: "name", value: nameField.value, message: "Name invalid" });
+    }
+
+    if (!emailField.checkValidity()) {
+      form_errors.push({ field: "email", value: emailField.value, message: "Email invalid" });
+    }
+
+    if (!commentsField.checkValidity()) {
+      form_errors.push({ field: "comments", value: commentsField.value, message: "Comments invalid" });
+    }
+
+    if (form_errors.length > 0) {
+      e.preventDefault();
+      errorOutput.textContent = "Please fix errors before submitting.";
+
+      let hidden = document.querySelector("input[name='form-errors']");
+      if (!hidden) {
+        hidden = document.createElement("input");
+        hidden.type = "hidden";
+        hidden.name = "form-errors";
+        form.appendChild(hidden);
+      }
+      hidden.value = JSON.stringify(form_errors);
+
+      console.log(form_errors); 
+    }
+  });
+
+  const toggle = document.getElementById("theme-toggle");
+  const currentTheme = localStorage.getItem("theme") || "light";
+  document.documentElement.setAttribute("data-theme", currentTheme);
+
+  toggle.addEventListener("click", () => {
+    const theme = document.documentElement.getAttribute("data-theme");
+    const newTheme = theme === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", newTheme);
+    localStorage.setItem("theme", newTheme);
+  });
+</script>
+
+</body>
+</html>

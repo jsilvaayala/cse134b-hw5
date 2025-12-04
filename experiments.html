@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Experiments</title>
+  <style>
+    custom-box {
+      display: block;
+      border: 2px dashed #555;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-family: sans-serif;
+      background-color: #f9f9f9;
+    }
+  </style>
+  <script>
+    class HelloConsole extends HTMLElement {
+      constructor() {
+        super();
+        console.log("Hello world!");
+      }
+    }
+    customElements.define('hello-console', HelloConsole);
+  </script>
+</head>
+<body>
+  <main>
+    <h1>Experiment Page</h1>
+
+    <custom-box>
+      This is a semantic custom element styled with CSS only.
+    </custom-box>
+
+    <hello-console></hello-console>
+  </main>
+</body>
+</html> 
