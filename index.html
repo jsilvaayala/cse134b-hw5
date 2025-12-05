@@ -2,11 +2,13 @@
 <html lang="en">
 <head>
   <link rel="stylesheet" href="styles.css">
-  <meta charset="UTF-8" >
-  <meta name="viewport" content="width=device-width, initial-scale=1" >
-  <meta name="description" content="Home - Portfolio of Web Developer" >
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Home - Portfolio of Web Developer">
   <title>Home | Portfolio</title>
+  <script type="module" src="project-card.js"></script>
 </head>
+
 <body>
   <header>
     <h1>Welcome to My Portfolio</h1>
@@ -30,11 +32,17 @@
 
     <section>
       <h2>Featured Projects</h2>
-      <article>
-        <h3>Project Title</h3>
-        <p>This project demonstrates use of semantic HTML and modern web technologies.</p>
-        <a href="projects.html#project1">See more</a>
-      </article>
+
+      <section id="projects">
+        <project-card
+          title="My Portfolio Website"
+          img="images/portfolio.png"
+          alt="Screenshot of my portfolio website"
+          description="A responsive portfolio website built with HTML, CSS, and JavaScript."
+          link=" ">
+        </project-card>
+      </section>
+
     </section>
   </main>
 
@@ -42,4 +50,4 @@
     <p>Jorge Silva</p>
   </footer>
 </body>
-</html> 
+</html>
