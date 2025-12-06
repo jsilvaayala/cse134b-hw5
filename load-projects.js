@@ -12,7 +12,7 @@ localButton.addEventListener('click', async () => {
 
 remoteButton.addEventListener('click', async () => {
   const response = await fetch(
-    'https://raw.githubusercontent.com/jsilvaayala/hw5-data/main/db.json'
+    'https://raw.githubusercontent.com/jsilvaayala/hw5-data/main/db'
   );
   const data = await response.json();
   displayProjects(data.projects);
