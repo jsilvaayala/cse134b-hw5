@@ -23,41 +23,20 @@
   </header>
 
   <main>
-    <section id="project1">
-      <h2>Project One</h2>
-      <figure>
-        <picture>
-          <img 
-            src="Project 1 Image.png" 
-            alt="Screenshot of Project One" 
-            loading="lazy" 
-            width="600" 
-            height="400">
-        </picture>
-      <figcaption>Portfolio site built with semantic HTML.</figcaption>
-      </figure>
-      <p>This project is a simple portfolio site built with semantic HTML.</p>
-    </section>
+    <section>
+      <h2>Featured Projects</h2>
 
-    <section id="project2">
-  <h2>Project Two</h2>
-  <figure>
-    <picture>
-      <img 
-        src="Project 1 Image.png" 
-        alt="Screenshot of Project One" 
-        loading="lazy" 
-        width="600" 
-        height="400">
-    </picture>
-    <figcaption>Responsive layout built with CSS Grid & Flexbox.</figcaption>
-  </figure>
-  <p>A responsive website demonstrating CSS Grid and Flexbox layouts.</p>
-</section>
+      <button id="load-local">Load Local</button>
+      <button id="load-remote">Load Remote</button>
+
+      <section id="projects"></section>
+    </section>
   </main>
 
   <footer>
     <p>Jorge Silva</p>
   </footer>
+  <script type="module" src="project-card.js"></script>
+  <script type="module" src="load-projects.js"></script>
 </body>
 </html> 
