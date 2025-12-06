@@ -16,26 +16,50 @@ function displayProjects(projects) {
   });
 }
 
-localButton.addEventListener('click', async () => {
-  try {
-    const response = await fetch('db.json'); 
-    const data = await response.json();
-    console.log("Local data:", data);
-    displayProjects(data.projects);
-  } catch (err) {
-    console.error("Error loading local JSON:", err);
-    alert("Failed to load local JSON. Make sure you are running a local server.");
+async function initLocalStorage() {
+  if (!localStorage.getItem('projects')) {
+    const localProjects = [
+      {
+        "id": 1,
+        "title": "My Computer Graphics Project - Image 1",
+        "img": "images/Project-1-Image.png",
+        "description": "Rendering with shading and lighting techniques.",
+        "link": "#"
+      },
+      {
+        "id": 2,
+        "title": "My Computer Graphics Project - Image 2",
+        "img": "images/Project-Image-2.png",
+        "description": "Using lighting and shading effects to create realistic scenes.",
+        "link": "#"
+      },
+      {
+        "id": 3,
+        "title": "My Computer Graphics Project - Image 3",
+        "img": "images/Project-Image-3.png",
+        "description": "Advanced 3D rendering with textures and camera effects.",
+        "link": "#"
+      }
+    ];
+    localStorage.setItem('projects', JSON.stringify(localProjects));
   }
+}
+
+initLocalStorage();
+
+localButton.addEventListener('click', () => {
+  const projects = JSON.parse(localStorage.getItem('projects'));
+  if (!projects) return alert("No local projects found.");
+  displayProjects(projects);
 });
 
 remoteButton.addEventListener('click', async () => {
   try {
     const response = await fetch('https://my-json-server.typicode.com/jsilvaayala/hw5-data/db');
     const data = await response.json();
-    console.log("Remote data:", data);
     displayProjects(data.projects);
   } catch (err) {
     console.error("Error loading remote JSON:", err);
-    alert("Failed to load remote JSON.");
+    alert("Failed to load remote projects.");
   }
 });
